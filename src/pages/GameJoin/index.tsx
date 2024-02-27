@@ -1,22 +1,29 @@
-import { useRef, useState } from 'react';
-import useSocket from '../../hooks/useSocket';
+import { useEffect, useRef, useState } from "react";
+import useSocket from "../../hooks/useSocket";
+import { Socket } from "socket.io-client";
+import { joinGame } from "./api";
+import { GameJoinCreateDto } from "./interface";
+import { useNavigate } from "react-router-dom";
 
 const GameJoin: React.FC = () => {
-  const codeInputRef = useRef<HTMLInputElement | null>(null);
-  const { server, serverIsConnected, isConnected, createSocket } = useSocket();
+  const [value, setValue] = useState<GameJoinCreateDto>();
+  const navigate = useNavigate();
 
-  const handleJoinGame = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(
+      (prev) =>
+        ({
+          ...prev,
+          [e.target.name]: e.target.value.replaceAll(" ", ""),
+        } as GameJoinCreateDto)
+    );
+  };
+
+  const handleJoinGame = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const socket = createSocket('game_starting');
-    console.log('SOCKERT', socket);
-    console.log(server);
-    console.log({
-      connected: serverIsConnected,
-      value: codeInputRef.current?.value,
-    });
-    if (true) {
-      const data = { code: codeInputRef.current?.value };
-      server?.emit('join', data);
+    if (value) {
+      await joinGame(value);
+      navigate(`/game-waiting/${value.code}`);
     }
   };
 
@@ -24,14 +31,27 @@ const GameJoin: React.FC = () => {
     <div>
       <form onSubmit={handleJoinGame}>
         <input
-          ref={codeInputRef}
-          type='text'
+          id="code"
+          value={value?.code}
+          onChange={handleOnChange}
+          type="text"
           maxLength={6}
           minLength={6}
-          name='gameCode'
-          placeholder='Input game code'
+          name="code"
+          placeholder="Input game code"
         />
-        <input type='submit' value='Join' />
+        <br />
+        <input
+          id="name"
+          value={value?.name}
+          onChange={handleOnChange}
+          name="name"
+          maxLength={6}
+          minLength={3}
+          placeholder="Input your name"
+        />
+        <br />
+        <input type="submit" value="Join" />
       </form>
     </div>
   );

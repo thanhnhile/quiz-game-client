@@ -1,12 +1,21 @@
-import { useContext, useEffect, useRef } from 'react';
-import { SocketManagerContext } from '../contexts/SocketManagerProvider';
-import { Socket } from 'socket.io-client';
+import { useState } from "react";
+import { io } from "socket.io-client";
 
-const useSocket = (namespace: string = '') => {
-  const { isConnected, createSocket, server, serverIsConnected } =
-    useContext(SocketManagerContext);
+const BASE_URL = "http://localhost:3001";
 
-  return { isConnected, createSocket, server, serverIsConnected };
+const useSocket = () => {
+  const createSocket = (code: string = "") => {
+    let socket = io(BASE_URL);
+    if (code) {
+      socket = io(BASE_URL, {
+        query: { gameCode: code },
+      });
+    }
+
+    return socket;
+  };
+
+  return { createSocket };
 };
 
 export default useSocket;

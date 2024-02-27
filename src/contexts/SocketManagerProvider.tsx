@@ -1,4 +1,4 @@
-import { createContext, useEffect, useRef, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { Manager, Socket } from 'socket.io-client';
 
 export type SocketManagerContextType = {
@@ -52,7 +52,7 @@ const SocketManagerProvider: React.FC<PropsType> = ({ children }) => {
   useEffect(() => {
     createManager();
     return () => {
-      if (manager) {
+      if (manager !== null) {
         manager?.off();
         server?.off();
         setServerIsConnected(false);

@@ -10,13 +10,11 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <SocketManagerProvider>
       <Router>
         <Routes>
           <Route path='/*' element={<App />} />
         </Routes>
       </Router>
-    </SocketManagerProvider>
   </React.StrictMode>
 );
 
