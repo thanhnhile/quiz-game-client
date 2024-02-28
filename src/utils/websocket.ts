@@ -1,8 +1,7 @@
-import { io } from 'socket.io-client';
+import { Socket, io } from "socket.io-client";
+import { BASE_URL } from "./constants";
 
-const BASE_URL = 'http://localhost:3001';
-
-export const createSocket = (code: string = '') => {
+export const createSocket = (code: string = ""): Socket => {
   let socket = io(BASE_URL);
   if (code) {
     socket = io(BASE_URL, {

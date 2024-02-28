@@ -1,6 +1,4 @@
-import { useEffect, useRef, useState } from "react";
-import useSocket from "../../hooks/useSocket";
-import { Socket } from "socket.io-client";
+import { useState } from "react";
 import { joinGame } from "./api";
 import { GameJoinCreateDto } from "./interface";
 import { useNavigate } from "react-router-dom";

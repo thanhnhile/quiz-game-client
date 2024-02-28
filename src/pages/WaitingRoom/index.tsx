@@ -1,53 +1,53 @@
-import { useParams } from 'react-router-dom';
-import { useEffect, useRef, useState } from 'react';
-import { Socket, io } from 'socket.io-client';
-import { GAME_EVENTS } from '../../utils/events';
-import { createSocket } from '../../utils/websocket';
-import { getParticipants } from './api';
-import { Participant } from './interface';
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { GAME_EVENTS } from "../../utils/events";
+import { GameStartDto, Participant } from "./interface";
+import { useSelector } from "react-redux";
+import { RootState, useAppDispatch } from "../../store";
+import {
+  addParticipant,
+  getJoinedParticipants,
+  startGame,
+} from "../../reducers/waittingSlice";
+import { initSocket, setAppState } from "../../reducers/appSlice";
 
 const WaitingRoom = () => {
   const { code } = useParams();
-  const [participants, setParticipants] = useState<Participant[]>([]);
-  const roomSocket = useRef<Socket | null>(null);
+  const { participants } = useSelector((state: RootState) => state.waitting);
+  const { socket } = useSelector((state: RootState) => state.app);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-  const getJonnedClient = async () => {
+  const handleNewJoin = (newParticipant: Participant) => {
+    dispatch(addParticipant(newParticipant));
+  };
+
+  useEffect(() => {
     if (code) {
-      const data = await getParticipants(code);
-      data && setParticipants(data);
-    }
-  };
-
-  const handleNewJoin = (newParticipants: Participant) => {
-    setParticipants((prev) => [newParticipants, ...prev]);
-  };
-
-  useEffect(() => {
-    getJonnedClient();
-  }, [code]);
-
-  useEffect(() => {
-    if (roomSocket.current == null) {
-      const socket = createSocket(code);
-      socket.on('connect', () => {
-        socket?.on(GAME_EVENTS.NEW_JOIN, handleNewJoin);
-        console.log(socket);
-      });
-      roomSocket.current = socket;
+      dispatch(getJoinedParticipants(code));
+      dispatch(initSocket(code));
     }
   }, [code]);
+  useEffect(() => {
+    socket?.on(GAME_EVENTS.NEW_JOIN, handleNewJoin);
+    socket?.on(GAME_EVENTS.START, () => {
+      dispatch(setAppState("STARTING"));
+      navigate(`/game/${code}`);
+    });
+  }, [socket]);
 
   const handleStart = () => {
-    //server.current?.emit("startGame", { code });
+    const payload: GameStartDto = {
+      code: code ?? "",
+    };
+    dispatch(startGame(payload));
   };
-
-  console.log(participants);
 
   return (
     <div>
       <h1>{code}</h1>
       <button onClick={handleStart}>Start</button>
-      <ul>
+      <ul id="list-participant">
         {participants?.map((paticipant: Participant) => {
           return <ol>{paticipant.name}</ol>;
         })}

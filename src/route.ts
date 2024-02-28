@@ -1,6 +1,7 @@
 import GameJoin from "./pages/GameJoin";
-import GameStart from "./pages/GameStart";
+import CreateGameSession from "./pages/CreateGameSession";
 import WaitingRoom from "./pages/WaitingRoom";
+import Game from "./pages/Game";
 
 export type RouteItem = {
   path: string;
@@ -12,15 +13,19 @@ export const PUBLIC_ROUTES: RouteItem[] = [
     path: "/",
     component: GameJoin,
   },
+  {
+    path: "/game-waiting/:code",
+    component: WaitingRoom,
+  },
+  {
+    path: "/game/:code",
+    component: Game,
+  },
 ];
 
 export const USER_ROUTES: RouteItem[] = [
   {
-    path: "/start-game",
-    component: GameStart,
-  },
-  {
-    path: "/game-waiting/:code",
-    component: WaitingRoom,
+    path: "/create-game",
+    component: CreateGameSession,
   },
 ];

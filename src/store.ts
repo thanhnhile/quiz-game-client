@@ -1,8 +1,13 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { useDispatch } from 'react-redux';
+import { configureStore } from "@reduxjs/toolkit";
+import { useDispatch } from "react-redux";
+import waittingReducer from "./reducers/waittingSlice";
+import appReducer from "./reducers/appSlice";
 
 export const store = configureStore({
-  reducer: {},
+  reducer: {
+    waitting: waittingReducer,
+    app: appReducer,
+  },
 });
 
 export type RootState = ReturnType<typeof store.getState>;
