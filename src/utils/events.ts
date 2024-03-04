@@ -5,5 +5,7 @@ export const GAME_EVENTS = {
   GAME_STARTING: "game_starting",
   QUIZZ_QUESTIONS: "quizz_questions",
   QUESTION_TIME_OUT: "question_time_out",
+  UPDATE_RANKING: "update_ranking",
+  RECEIVE_ANSWER: "receive_answer",
   TIME_OUT: "time_out",
 };

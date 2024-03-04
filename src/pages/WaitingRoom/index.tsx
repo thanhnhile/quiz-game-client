@@ -9,12 +9,12 @@ import {
   getJoinedParticipants,
   startGame,
 } from "../../reducers/waittingSlice";
-import { initSocket, setAppState } from "../../reducers/appSlice";
+import { initSocket, setAppState, setUIState } from "../../reducers/appSlice";
 
 const WaitingRoom = () => {
   const { code } = useParams();
   const { participants } = useSelector((state: RootState) => state.waitting);
-  const { socket } = useSelector((state: RootState) => state.app);
+  const { socket, clientName } = useSelector((state: RootState) => state.app);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -25,13 +25,14 @@ const WaitingRoom = () => {
   useEffect(() => {
     if (code) {
       dispatch(getJoinedParticipants(code));
-      dispatch(initSocket(code));
+      dispatch(initSocket({ code, clientName }));
     }
   }, [code]);
   useEffect(() => {
     socket?.on(GAME_EVENTS.NEW_JOIN, handleNewJoin);
     socket?.on(GAME_EVENTS.START, () => {
-      dispatch(setAppState("STARTING"));
+      dispatch(setAppState("IN_PROGRESS"));
+      dispatch(setUIState("COUNT_DOWN"));
       navigate(`/game/${code}`);
     });
   }, [socket]);

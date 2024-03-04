@@ -2,6 +2,7 @@ import GameJoin from "./pages/GameJoin";
 import CreateGameSession from "./pages/CreateGameSession";
 import WaitingRoom from "./pages/WaitingRoom";
 import Game from "./pages/Game";
+import Result from "./pages/Result";
 
 export type RouteItem = {
   path: string;
@@ -20,6 +21,10 @@ export const PUBLIC_ROUTES: RouteItem[] = [
   {
     path: "/game/:code",
     component: Game,
+  },
+  {
+    path: "/game/:code/result",
+    component: Result,
   },
 ];
 

@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { joinGame } from "./api";
 import { GameJoinCreateDto } from "./interface";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../../store";
+import { joinGame } from "../../reducers/appSlice";
 
 const GameJoin: React.FC = () => {
   const [value, setValue] = useState<GameJoinCreateDto>();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(
@@ -20,7 +22,7 @@ const GameJoin: React.FC = () => {
   const handleJoinGame = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (value) {
-      await joinGame(value);
+      dispatch(joinGame(value));
       navigate(`/game-waiting/${value.code}`);
     }
   };
