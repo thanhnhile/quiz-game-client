@@ -1,8 +1,9 @@
-import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { Socket, io } from "socket.io-client";
-import { AppStateType, BASE_URL, UIState } from "../utils/constants";
-import { RankingBoard } from "../pages/Game/interface";
-import { postJoinGame } from "../pages/GameJoin/api";
+import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { Socket, io } from 'socket.io-client';
+import { AppStateType, BASE_URL, UIState } from '../utils/constants';
+import { RankingBoard } from '../pages/Game/interface';
+import { postJoinGame } from '../pages/GameJoin/api';
+import { postCreateNewGame } from '../pages/CreateGameSession/api';
 
 type AppSliceType = {
   gameCode?: string;
@@ -11,25 +12,30 @@ type AppSliceType = {
   uiState?: UIState;
   rankingBoard?: RankingBoard;
   accessToken?: string;
-  currentQuestionIndex?: number;
+  name?: string;
 };
 
 const initialState: AppSliceType = {
   socket: null,
 };
 
-export const joinGame = createAsyncThunk("app/joinGame", postJoinGame);
+export const joinGame = createAsyncThunk('app/joinGame', postJoinGame);
+
+export const createNewGame = createAsyncThunk(
+  'app/createNewGame',
+  postCreateNewGame
+);
 
 const appSlice = createSlice({
-  name: "app",
+  name: 'app',
   initialState,
   reducers: {
-    initSocket: (
-      state,
-      action: PayloadAction<{ code?: string; clientName?: string }>
-    ) => {
+    initSocket: (state, action: PayloadAction<{ isHost: boolean }>) => {
       if (!state.socket) {
         let roomSocket = io(BASE_URL, {
+          query: {
+            ...action.payload,
+          },
           auth: {
             token: state.accessToken,
           },
@@ -50,18 +56,33 @@ const appSlice = createSlice({
     setRankingBoard: (state, action: PayloadAction<RankingBoard>) => {
       state.rankingBoard = action.payload;
     },
-    setCurrentQuestionIndex: (state, action: PayloadAction<number>) => {
-      state.currentQuestionIndex = action.payload;
-    },
   },
   extraReducers: (builder) => {
-    builder.addCase(
-      joinGame.fulfilled,
-      (state, action: PayloadAction<{ accessToken: string }>) => {
-        setAppState("WAITING");
-        state.accessToken = action.payload.accessToken;
-      }
-    );
+    builder
+      .addCase(
+        joinGame.fulfilled,
+        (
+          state,
+          action: PayloadAction<{ accessToken: string; name: string }>
+        ) => {
+          setAppState('WAITING');
+          state.accessToken = action.payload?.accessToken;
+          state.name = action.payload?.name;
+          initSocket({ isHost: false });
+          console.log(action.payload);
+        }
+      )
+      .addCase(
+        createNewGame.fulfilled,
+        (
+          state,
+          action: PayloadAction<{ accessToken: string; code: string }>
+        ) => {
+          state.accessToken = action.payload.accessToken;
+          state.gameCode = action.payload.code;
+          initSocket({ isHost: true });
+        }
+      );
   },
 });
 

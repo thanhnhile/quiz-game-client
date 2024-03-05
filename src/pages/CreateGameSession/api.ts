@@ -1,7 +1,7 @@
 import * as request from "../../utils/request";
 import { GameSesstionCreateDto } from "./interface";
 
-export const createNewGame = async (payload: GameSesstionCreateDto) => {
+export const postCreateNewGame = async (payload: GameSesstionCreateDto) => {
   try {
     const data = await request.post("games", payload);
     return data;

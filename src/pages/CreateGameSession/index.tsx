@@ -1,19 +1,18 @@
-import { createNewGame } from "./api";
-import { useNavigate } from "react-router-dom";
-import { Game } from "./interface";
+import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../../store';
+import { createNewGame } from '../../reducers/appSlice';
 
 const GameStart: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const handleNewGame = async () => {
-    const payload = {
-      timeLimit: "1M",
-      questionListId: "65e5365a7f677e7850645c98",
+    const newGamePayload = {
+      timeLimit: '1M',
+      questionListId: '65e5365a7f677e7850645c98',
     };
-    const data: Game = await createNewGame(payload);
-    if (data) {
-      navigate(`/game-waiting/${data.code}`);
-    }
+    const { payload } = await dispatch(createNewGame(newGamePayload));
+    navigate(`/game-waiting/${payload?.code}`);
   };
 
   return (
