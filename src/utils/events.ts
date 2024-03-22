@@ -4,6 +4,7 @@ export const GAME_EVENTS = {
   START: "start",
   GAME_STARTING: "game_starting",
   QUIZZ_QUESTIONS: "quizz_questions",
+  NEXT_QUESTION: "next_question",
   QUESTION_TIME_OUT: "question_time_out",
   UPDATE_RANKING: "update_ranking",
   RECEIVE_ANSWER: "receive_answer",

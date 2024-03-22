@@ -5,6 +5,9 @@ import App from "./App";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { store } from "./store";
 import { Provider } from "react-redux";
+import { ThemeProvider } from "@emotion/react";
+import theme from "./theme";
+import { CssBaseline } from "@mui/material";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -12,11 +15,14 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <Router>
-        <Routes>
-          <Route path="/*" element={<App />} />
-        </Routes>
-      </Router>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Router>
+          <Routes>
+            <Route path="/*" element={<App />} />
+          </Routes>
+        </Router>
+      </ThemeProvider>
     </Provider>
   </React.StrictMode>
 );

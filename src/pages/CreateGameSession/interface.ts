@@ -1,5 +1,4 @@
 export interface GameSesstionCreateDto {
-  timeLimit: string;
   questionListId: string;
 }
 

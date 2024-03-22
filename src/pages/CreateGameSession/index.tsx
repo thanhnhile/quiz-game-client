@@ -1,6 +1,6 @@
-import { useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../../store';
-import { createNewGame } from '../../reducers/appSlice';
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../../store";
+import { createNewGame, setAppState } from "../../reducers/appSlice";
 
 const GameStart: React.FC = () => {
   const navigate = useNavigate();
@@ -8,11 +8,11 @@ const GameStart: React.FC = () => {
 
   const handleNewGame = async () => {
     const newGamePayload = {
-      timeLimit: '1M',
-      questionListId: '65e5365a7f677e7850645c98',
+      questionListId: "65fd2866ef5e9726cb6518e8",
     };
     const { payload } = await dispatch(createNewGame(newGamePayload));
-    navigate(`/game-waiting/${payload?.code}`);
+    dispatch(setAppState("WAITING"));
+    payload?.code && navigate(`/game-waiting/${payload.code}`);
   };
 
   return (

@@ -1,44 +1,54 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store';
-import { useEffect, useState } from 'react';
-import { GAME_EVENTS } from '../../utils/events';
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store";
+import { useEffect, useState } from "react";
+import { GAME_EVENTS } from "../../utils/events";
 import {
   setAppState,
   setRankingBoard,
   setUIState,
-} from '../../reducers/appSlice';
-import { GameAnswerDto, Question, RankingBoard } from './interface';
-import { useNavigate } from 'react-router-dom';
+} from "../../reducers/appSlice";
+import {
+  CurrentQuestion,
+  GameAnswerDto,
+  Question,
+  RankingBoard,
+} from "./interface";
+import { useNavigate } from "react-router-dom";
 
 const Game = () => {
-  const { socket, uiState, rankingBoard, name, gameCode } = useSelector(
+  const { socket, uiState, rankingBoard, name, gameCode, isHost } = useSelector(
     (state: RootState) => state.app
   );
   const [count, setCount] = useState();
-  const [currentQuestion, setCurrentQuestion] = useState<Question>();
-  const [answer, setAnswer] = useState('');
+  const [currentQuestion, setCurrentQuestion] = useState<CurrentQuestion>();
+  const [answer, setAnswer] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleQuizzQuestions = (data: Question) => {
-    dispatch(setUIState('QUESTION'));
-    setCurrentQuestion(data);
+    dispatch(setUIState("QUESTION"));
+    setCurrentQuestion({
+      ...data,
+      appearTimestamp: Date.now(),
+    });
   };
 
   const handleChangeAnswer = (optionId: string) => {
+    if (!currentQuestion) return;
     setAnswer(optionId);
-    let score = 0;
-    if (optionId === currentQuestion?.answer) {
-      score = 100;
-    }
+    const responeTimestamp = Date.now() - currentQuestion.appearTimestamp;
     const payload: GameAnswerDto = {
-      code: gameCode ?? '',
-      participantName: name ?? '',
-      questionId: currentQuestion?._id ?? '',
-      score,
-      timestamp: Date.now(),
+      code: gameCode ?? "",
+      participantName: name ?? "",
+      questionId: currentQuestion?._id ?? "",
+      answerId: optionId,
+      responeTimestamp,
     };
     socket?.emit(GAME_EVENTS.RECEIVE_ANSWER, payload);
+  };
+
+  const handleNext = () => {
+    socket?.emit(GAME_EVENTS.NEXT_QUESTION);
   };
 
   useEffect(() => {
@@ -47,25 +57,25 @@ const Game = () => {
     });
     socket?.on(GAME_EVENTS.QUIZZ_QUESTIONS, handleQuizzQuestions);
     socket?.on(GAME_EVENTS.QUESTION_TIME_OUT, (data) => {
-      setAnswer('');
+      setAnswer("");
       console.log(data);
     });
     socket?.on(GAME_EVENTS.UPDATE_RANKING, (data: RankingBoard) => {
-      data.hasNextQuestion && dispatch(setUIState('RANKING_BOARD'));
+      data.hasNextQuestion && dispatch(setUIState("RANKING_BOARD"));
       dispatch(setRankingBoard(data));
     });
     socket?.on(GAME_EVENTS.TIME_OUT, () => {
-      dispatch(setAppState('RESULT'));
+      dispatch(setAppState("RESULT"));
       navigate(`/game/${gameCode}/result`);
     });
   }, []);
 
   const renderCountDown = () => {
-    return uiState === 'COUNT_DOWN' ? <h1>{count}</h1> : null;
+    return uiState === "COUNT_DOWN" ? <h1>{count}</h1> : null;
   };
 
   const renderQuestion = () => {
-    return uiState === 'QUESTION' ? (
+    return uiState === "QUESTION" ? (
       <QuestionComponent
         question={currentQuestion}
         answer={answer}
@@ -75,8 +85,9 @@ const Game = () => {
   };
 
   const renderRankingBoard = () => {
-    return uiState === 'RANKING_BOARD' ? (
+    return uiState === "RANKING_BOARD" ? (
       <div>
+        {isHost && <button onClick={handleNext}>Next</button>}
         <div>
           <h3>TOP 3</h3>
           {rankingBoard?.top3?.map((p, index) => {
@@ -128,7 +139,7 @@ const QuestionComponent: React.FC<QuestionPropType> = ({
             <input
               checked={item.id === answer}
               onChange={() => handChangeAnswer(item.id)}
-              type='radio'
+              type="radio"
               name={question._id}
               id={item.id}
               value={item.id}

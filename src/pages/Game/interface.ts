@@ -9,6 +9,10 @@ export interface Question {
   answer: string;
 }
 
+export interface CurrentQuestion extends Question {
+  appearTimestamp: number;
+}
+
 export interface Option {
   id: string;
   content: string;
@@ -18,8 +22,8 @@ export interface GameAnswerDto {
   code: string;
   participantName: string;
   questionId: string;
-  score: number;
-  timestamp: number;
+  answerId: string;
+  responeTimestamp: number;
 }
 
 export interface RankingBoard {

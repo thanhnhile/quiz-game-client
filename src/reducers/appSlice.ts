@@ -1,9 +1,9 @@
-import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { Socket, io } from 'socket.io-client';
-import { AppStateType, BASE_URL, UIState } from '../utils/constants';
-import { RankingBoard } from '../pages/Game/interface';
-import { postJoinGame } from '../pages/GameJoin/api';
-import { postCreateNewGame } from '../pages/CreateGameSession/api';
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { Socket, io } from "socket.io-client";
+import { AppStateType, BASE_URL, UIState } from "../utils/constants";
+import { RankingBoard } from "../pages/Game/interface";
+import { postJoinGame } from "../pages/GameJoin/api";
+import { postCreateNewGame } from "../pages/CreateGameSession/api";
 
 type AppSliceType = {
   gameCode?: string;
@@ -13,29 +13,28 @@ type AppSliceType = {
   rankingBoard?: RankingBoard;
   accessToken?: string;
   name?: string;
+  isHost: boolean;
 };
 
 const initialState: AppSliceType = {
   socket: null,
+  isHost: false,
 };
 
-export const joinGame = createAsyncThunk('app/joinGame', postJoinGame);
+export const joinGame = createAsyncThunk("app/joinGame", postJoinGame);
 
 export const createNewGame = createAsyncThunk(
-  'app/createNewGame',
+  "app/createNewGame",
   postCreateNewGame
 );
 
 const appSlice = createSlice({
-  name: 'app',
+  name: "app",
   initialState,
   reducers: {
-    initSocket: (state, action: PayloadAction<{ isHost: boolean }>) => {
+    initSocket: (state) => {
       if (!state.socket) {
         let roomSocket = io(BASE_URL, {
-          query: {
-            ...action.payload,
-          },
           auth: {
             token: state.accessToken,
           },
@@ -63,13 +62,16 @@ const appSlice = createSlice({
         joinGame.fulfilled,
         (
           state,
-          action: PayloadAction<{ accessToken: string; name: string }>
+          action: PayloadAction<{
+            accessToken: string;
+            name: string;
+            code: string;
+          }>
         ) => {
-          setAppState('WAITING');
           state.accessToken = action.payload?.accessToken;
           state.name = action.payload?.name;
-          initSocket({ isHost: false });
-          console.log(action.payload);
+          state.isHost = false;
+          state.gameCode = action.payload.code;
         }
       )
       .addCase(
@@ -79,8 +81,8 @@ const appSlice = createSlice({
           action: PayloadAction<{ accessToken: string; code: string }>
         ) => {
           state.accessToken = action.payload.accessToken;
+          state.isHost = true;
           state.gameCode = action.payload.code;
-          initSocket({ isHost: true });
         }
       );
   },
