@@ -7,9 +7,12 @@ import { RootState, useAppDispatch } from "../../store";
 import {
   addParticipant,
   getJoinedParticipants,
+  removeParticipant,
   startGame,
 } from "../../reducers/waittingSlice";
 import { initSocket, setAppState, setUIState } from "../../reducers/appSlice";
+import { Box, Paper } from "@mui/material";
+import { AnimatePresence, motion } from "framer-motion";
 
 const WaitingRoom = () => {
   const { code } = useParams();
@@ -21,6 +24,9 @@ const WaitingRoom = () => {
   const handleNewJoin = (newParticipant: Participant) => {
     dispatch(addParticipant(newParticipant));
   };
+  const handleLeave = (name: string) => {
+    dispatch(removeParticipant(name));
+  };
 
   useEffect(() => {
     if (code) {
@@ -30,6 +36,7 @@ const WaitingRoom = () => {
   }, [code]);
   useEffect(() => {
     socket?.on(GAME_EVENTS.NEW_JOIN, handleNewJoin);
+    socket?.on(GAME_EVENTS.LEAVE, handleLeave);
     socket?.on(GAME_EVENTS.START, () => {
       dispatch(setAppState("IN_PROGRESS"));
       dispatch(setUIState("COUNT_DOWN"));
@@ -45,16 +52,26 @@ const WaitingRoom = () => {
   };
 
   return (
-    <div>
+    <Box>
       <h1>{code}</h1>
       {isHost && <button onClick={handleStart}>Start</button>}
 
       <ul id="list-participant">
-        {participants?.map((paticipant: Participant) => {
-          return <ol>{paticipant.name}</ol>;
-        })}
+        <AnimatePresence initial={false}>
+          {participants?.map((paticipant: Participant) => {
+            return (
+              <motion.li
+                initial={{ opacity: 0, scale: 0.3 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
+              >
+                <Paper elevation={3}>{paticipant.name}</Paper>
+              </motion.li>
+            );
+          })}
+        </AnimatePresence>
       </ul>
-    </div>
+    </Box>
   );
 };
 

@@ -32,42 +32,44 @@ const GameJoin: React.FC = () => {
   return (
     <Box
       sx={{
-        backgroundColor: "#610C9F",
         height: "100vh",
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "column",
       }}
     >
-      <Stack alignItems="center" justifyContent="center" direction="column">
+      <Box>
         <Typography
           component="h1"
           sx={{ py: "1rem", fontSize: "6rem", fontWeight: "700px" }}
         >
           JOIN GAME
         </Typography>
-        <form onSubmit={handleJoinGame}>
-          <input
-            id="code"
-            value={value?.code}
-            onChange={handleOnChange}
-            type="text"
-            maxLength={6}
-            minLength={6}
-            name="code"
-            placeholder="Input game code"
-          />
-          <br />
-          <input
-            id="name"
-            value={value?.name}
-            onChange={handleOnChange}
-            name="name"
-            maxLength={6}
-            minLength={3}
-            placeholder="Input your name"
-          />
-          <br />
-          <input type="submit" value="Join" />
-        </form>
-      </Stack>
+      </Box>
+      <form onSubmit={handleJoinGame}>
+        <input
+          id="code"
+          value={value?.code}
+          onChange={handleOnChange}
+          type="text"
+          maxLength={6}
+          minLength={6}
+          name="code"
+          placeholder="Input game code"
+        />
+        <br />
+        <input
+          id="name"
+          value={value?.name}
+          onChange={handleOnChange}
+          name="name"
+          maxLength={6}
+          minLength={3}
+          placeholder="Input your name"
+        />
+        <br />
+        <input type="submit" value="Join" />
+      </form>
     </Box>
   );
 };

@@ -16,10 +16,6 @@ const theme = createTheme({
           fontFamily: "Roboto",
           color: "#fff",
         },
-        h1: {
-          fontSize: "6rem",
-          fontWeight: "700px",
-        },
       },
     },
     MuiButton: {
@@ -27,7 +23,8 @@ const theme = createTheme({
         root: {
           borderRadius: "8px",
           textTransform: "none",
-          fontSize: "1.4rem",
+          fontSize: "1.6rem",
+          color: "#ffff",
         },
       },
     },
