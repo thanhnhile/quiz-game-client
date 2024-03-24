@@ -1,9 +1,28 @@
-import { useState } from "react";
-import { GameJoinCreateDto } from "./interface";
-import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../store";
-import { joinGame, setAppState } from "../../reducers/appSlice";
-import { Box, Stack, Typography } from "@mui/material";
+import { useState } from 'react';
+import { GameJoinCreateDto } from './interface';
+import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../../store';
+import { joinGame, setAppState } from '../../reducers/appSlice';
+import { Box, Paper, Button, TextField, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { CustomTextField } from '../../components/custom/CustomTextField';
+
+const FormPaper = styled(Paper)(({ theme }) => ({
+  width: 400,
+  padding: theme.spacing(2),
+  ...theme.typography.body2,
+  textAlign: 'center',
+}));
+
+const JoinButton = styled(Button)(({ theme }) => ({
+  width: '100%',
+  boxShadow: `0 3px 4px ${theme.palette.secondary.main}`,
+  transition: 'ease 0.3s',
+  '&:hover': {
+    backgroundColor: theme.palette.secondary.main,
+    transform: 'translateY(3px)',
+  },
+}));
 
 const GameJoin: React.FC = () => {
   const [value, setValue] = useState<GameJoinCreateDto>();
@@ -15,7 +34,7 @@ const GameJoin: React.FC = () => {
       (prev) =>
         ({
           ...prev,
-          [e.target.name]: e.target.value.replaceAll(" ", ""),
+          [e.target.name]: e.target.value.replaceAll(' ', ''),
         } as GameJoinCreateDto)
     );
   };
@@ -24,7 +43,7 @@ const GameJoin: React.FC = () => {
     e.preventDefault();
     if (value) {
       await dispatch(joinGame(value));
-      dispatch(setAppState("WAITING"));
+      dispatch(setAppState('WAITING'));
       navigate(`/game-waiting/${value.code}`);
     }
   };
@@ -32,44 +51,52 @@ const GameJoin: React.FC = () => {
   return (
     <Box
       sx={{
-        height: "100vh",
-        alignItems: "center",
-        justifyContent: "center",
-        flexDirection: "column",
+        height: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'column',
       }}
     >
-      <Box>
-        <Typography
-          component="h1"
-          sx={{ py: "1rem", fontSize: "6rem", fontWeight: "700px" }}
-        >
-          JOIN GAME
-        </Typography>
-      </Box>
-      <form onSubmit={handleJoinGame}>
-        <input
-          id="code"
-          value={value?.code}
-          onChange={handleOnChange}
-          type="text"
-          maxLength={6}
-          minLength={6}
-          name="code"
-          placeholder="Input game code"
-        />
-        <br />
-        <input
-          id="name"
-          value={value?.name}
-          onChange={handleOnChange}
-          name="name"
-          maxLength={6}
-          minLength={3}
-          placeholder="Input your name"
-        />
-        <br />
-        <input type="submit" value="Join" />
-      </form>
+      <Typography
+        component='h1'
+        sx={{
+          py: '1rem',
+          fontSize: '4.5rem',
+          fontWeight: '700',
+          color: '#fff',
+        }}
+        gutterBottom
+      >
+        QUIZ GAME!
+      </Typography>
+      <FormPaper>
+        <form onSubmit={handleJoinGame}>
+          <CustomTextField
+            variant='outlined'
+            id='code'
+            value={value?.code}
+            onChange={handleOnChange}
+            type='text'
+            name='code'
+            fullWidth
+            placeholder='Code'
+            inputProps={{ maxLength: 6 }}
+          />
+          <CustomTextField
+            id='name'
+            value={value?.name}
+            onChange={handleOnChange}
+            name='name'
+            fullWidth
+            placeholder='Your name'
+            inputProps={{ maxLength: 6 }}
+          />
+          <JoinButton variant='contained' color='secondary' type='submit'>
+            ENTER
+          </JoinButton>
+        </form>
+      </FormPaper>
     </Box>
   );
 };

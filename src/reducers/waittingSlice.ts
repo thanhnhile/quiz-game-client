@@ -1,10 +1,10 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
-import { Participant } from "../pages/WaitingRoom/interface";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
+import { Participant } from '../pages/WaitingRoom/interface';
 import {
   getParticipants,
   startGame as startGameApi,
-} from "../pages/WaitingRoom/api";
+} from '../pages/WaitingRoom/api';
 
 type WaitingState = {
   participants: Participant[];
@@ -19,16 +19,16 @@ const initialState: WaitingState = {
 //asyn thunk
 
 export const getJoinedParticipants = createAsyncThunk(
-  "waiting/getJoinedParticipants",
+  'waiting/getJoinedParticipants',
   getParticipants
 );
 
-export const startGame = createAsyncThunk("waiting/startGame", startGameApi);
+export const startGame = createAsyncThunk('waiting/startGame', startGameApi);
 
 //slice
 
 const waitiingSilce = createSlice({
-  name: "waiting",
+  name: 'waiting',
   initialState,
   reducers: {
     setParticipants: (state, action: PayloadAction<Participant[]>) => {
@@ -49,6 +49,7 @@ const waitiingSilce = createSlice({
         state.participants.splice(index, 1);
         state.count--;
       }
+      console.log('INDEX: ', action.payload);
     },
   },
   extraReducers: (buider) => {

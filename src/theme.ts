@@ -1,37 +1,46 @@
-import { createTheme } from "@mui/material";
+import { createTheme } from '@mui/material';
+import { inherits } from 'util';
 
 const theme = createTheme({
   palette: {
     background: {
-      default: "#610C9F", // Set the default background color
+      default: '#610C9F', // Set the default background color
     },
     primary: {
-      main: "#610C9F",
+      main: '#940B92',
+    },
+    secondary: {
+      main: '#333333',
     },
   },
   components: {
     MuiTypography: {
       styleOverrides: {
         root: {
-          fontFamily: "Roboto",
-          color: "#fff",
+          fontFamily: 'Roboto',
+        },
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          fontSize: '1.6rem',
         },
       },
     },
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: "8px",
-          textTransform: "none",
-          fontSize: "1.6rem",
-          color: "#ffff",
+          borderRadius: '3px',
+          fontSize: '1.6rem',
+          color: '#ffff',
         },
       },
     },
     MuiCssBaseline: {
       styleOverrides: {
         html: {
-          fontSize: "62.5%",
+          fontSize: '62.5%',
         },
       },
     },
