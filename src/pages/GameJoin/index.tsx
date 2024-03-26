@@ -1,26 +1,27 @@
-import { useState } from 'react';
-import { GameJoinCreateDto } from './interface';
-import { useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../../store';
-import { joinGame, setAppState } from '../../reducers/appSlice';
-import { Box, Paper, Button, TextField, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { CustomTextField } from '../../components/custom/CustomTextField';
+import { useState } from "react";
+import { GameJoinCreateDto } from "./interface";
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../../store";
+import { joinGame, setAppState } from "../../reducers/appSlice";
+import { Box, Paper, Button, TextField, Typography } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { CustomTextField } from "../../components/custom/CustomTextField";
+import Toast from "../../components/custom/Toast";
 
 const FormPaper = styled(Paper)(({ theme }) => ({
   width: 400,
   padding: theme.spacing(2),
   ...theme.typography.body2,
-  textAlign: 'center',
+  textAlign: "center",
 }));
 
 const JoinButton = styled(Button)(({ theme }) => ({
-  width: '100%',
+  width: "100%",
   boxShadow: `0 3px 4px ${theme.palette.secondary.main}`,
-  transition: 'ease 0.3s',
-  '&:hover': {
+  transition: "ease 0.3s",
+  "&:hover": {
     backgroundColor: theme.palette.secondary.main,
-    transform: 'translateY(3px)',
+    transform: "translateY(3px)",
   },
 }));
 
@@ -34,7 +35,7 @@ const GameJoin: React.FC = () => {
       (prev) =>
         ({
           ...prev,
-          [e.target.name]: e.target.value.replaceAll(' ', ''),
+          [e.target.name]: e.target.value.replaceAll(" ", ""),
         } as GameJoinCreateDto)
     );
   };
@@ -43,7 +44,7 @@ const GameJoin: React.FC = () => {
     e.preventDefault();
     if (value) {
       await dispatch(joinGame(value));
-      dispatch(setAppState('WAITING'));
+      dispatch(setAppState("WAITING"));
       navigate(`/game-waiting/${value.code}`);
     }
   };
@@ -51,20 +52,21 @@ const GameJoin: React.FC = () => {
   return (
     <Box
       sx={{
-        height: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        flexDirection: 'column',
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
       }}
     >
+      <Toast message="hello from hell" duration={1000} severity="success" />
       <Typography
-        component='h1'
+        component="h1"
         sx={{
-          py: '1rem',
-          fontSize: '4.5rem',
-          fontWeight: '700',
-          color: '#fff',
+          py: "1rem",
+          fontSize: "4.5rem",
+          fontWeight: "700",
+          color: "#fff",
         }}
         gutterBottom
       >
@@ -73,26 +75,26 @@ const GameJoin: React.FC = () => {
       <FormPaper>
         <form onSubmit={handleJoinGame}>
           <CustomTextField
-            variant='outlined'
-            id='code'
+            variant="outlined"
+            id="code"
             value={value?.code}
             onChange={handleOnChange}
-            type='text'
-            name='code'
+            type="text"
+            name="code"
             fullWidth
-            placeholder='Code'
+            placeholder="Code"
             inputProps={{ maxLength: 6 }}
           />
           <CustomTextField
-            id='name'
+            id="name"
             value={value?.name}
             onChange={handleOnChange}
-            name='name'
+            name="name"
             fullWidth
-            placeholder='Your name'
+            placeholder="Your name"
             inputProps={{ maxLength: 6 }}
           />
-          <JoinButton variant='contained' color='secondary' type='submit'>
+          <JoinButton variant="contained" color="secondary" type="submit">
             ENTER
           </JoinButton>
         </form>
