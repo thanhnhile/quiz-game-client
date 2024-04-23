@@ -1,5 +1,4 @@
 import { createTheme } from '@mui/material';
-import { inherits } from 'util';
 
 const theme = createTheme({
   palette: {

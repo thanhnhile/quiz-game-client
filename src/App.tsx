@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
-import './App.css';
+import 'react-toastify/dist/ReactToastify.css';
 import { Route, Routes } from 'react-router-dom';
+import { ToastContainer, Zoom } from 'react-toastify';
 import { PUBLIC_ROUTES, USER_ROUTES, RouteItem } from './route';
 
 function App() {
@@ -25,6 +26,13 @@ function App() {
         {createRoute(PUBLIC_ROUTES, null)}
         {createRoute(USER_ROUTES, null)}
       </Routes>
+      <ToastContainer
+        position='top-right'
+        autoClose={5000}
+        theme='dark'
+        pauseOnHover
+        transition={Zoom}
+      />
     </div>
   );
 }
