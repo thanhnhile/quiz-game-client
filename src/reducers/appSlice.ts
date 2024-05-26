@@ -1,9 +1,9 @@
-import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { Socket, io } from "socket.io-client";
-import { AppStateType, BASE_URL, UIState } from "../utils/constants";
-import { RankingBoard } from "../pages/Game/interface";
-import { postJoinGame } from "../pages/GameJoin/api";
-import { postCreateNewGame } from "../pages/CreateGameSession/api";
+import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { Socket, io } from 'socket.io-client';
+import { AppStateType, BASE_URL, UIState } from '../utils/constants';
+import { RankingBoard } from '../pages/Game/interface';
+import { postJoinGame } from '../pages/GameJoin/api';
+import { postCreateNewGame } from '../pages/CreateGameSession/api';
 
 type AppSliceType = {
   gameCode?: string;
@@ -21,15 +21,15 @@ const initialState: AppSliceType = {
   isHost: false,
 };
 
-export const joinGame = createAsyncThunk("app/joinGame", postJoinGame);
+export const joinGame = createAsyncThunk('app/joinGame', postJoinGame);
 
 export const createNewGame = createAsyncThunk(
-  "app/createNewGame",
+  'app/createNewGame',
   postCreateNewGame
 );
 
 const appSlice = createSlice({
-  name: "app",
+  name: 'app',
   initialState,
   reducers: {
     initSocket: (state) => {

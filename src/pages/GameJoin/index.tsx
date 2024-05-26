@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { GameJoinCreateDto } from './interface';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../store';
-import { joinGame, setAppState } from '../../reducers/appSlice';
-import { Box, Paper, Button, TextField, Typography } from '@mui/material';
+import { joinGame, setAppState } from '@reducers/appSlice';
+import { Box, Paper, Button, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { CustomTextField } from '../../components/custom/CustomTextField';
+import { CustomTextField } from '@components/custom/CustomTextField';
 import { toast } from 'react-toastify';
 
 const FormPaper = styled(Paper)(({ theme }) => ({

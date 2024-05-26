@@ -1,5 +1,5 @@
-import { useSelector } from "react-redux";
-import { RootState } from "../../store";
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
 
 const Result = () => {
   const { rankingBoard } = useSelector((state: RootState) => state.app);
@@ -7,7 +7,7 @@ const Result = () => {
   return (
     <div>
       <h1>Result</h1>
-      <div>
+      {/* <div>
         <div>
           <h3>TOP 3</h3>
           {rankingBoard?.top3?.map((p, index) => {
@@ -25,7 +25,7 @@ const Result = () => {
             </ol>
           ))}
         </ul>
-      </div>
+      </div> */}
     </div>
   );
 };

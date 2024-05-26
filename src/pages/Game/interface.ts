@@ -28,6 +28,5 @@ export interface GameAnswerDto {
 
 export interface RankingBoard {
   hasNextQuestion: boolean;
-  top3: Participant[];
-  others: Participant[];
+  data: Participant[];
 }
