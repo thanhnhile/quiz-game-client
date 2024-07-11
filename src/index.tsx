@@ -1,16 +1,17 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
 import "./index.css";
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import { store } from './store';
-import { Provider } from 'react-redux';
-import { ThemeProvider } from '@emotion/react';
-import theme from './theme';
-import { CssBaseline } from '@mui/material';
+import "react-toastify/dist/ReactToastify.css";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { store } from "./store";
+import { Provider } from "react-redux";
+import { ThemeProvider } from "@emotion/react";
+import theme from "./theme";
+import { CssBaseline } from "@mui/material";
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+  document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>

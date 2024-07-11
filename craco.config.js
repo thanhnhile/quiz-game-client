@@ -2,6 +2,9 @@
 const path = require('path');
 const { pathsToModuleNameMapper } = require('ts-jest');
 const { compilerOptions } = require('./tsconfig.path.json');
+//const { POSTCSS_MODES } = require('@craco/craco');
+
+
 module.exports = {
   webpack: {
     alias: {
@@ -18,5 +21,5 @@ module.exports = {
         prefix: '<rootDir>/src/',
       }),
     },
-  },
+  }
 };

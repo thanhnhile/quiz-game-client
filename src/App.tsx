@@ -1,8 +1,7 @@
-import React, { Fragment } from 'react';
-import 'react-toastify/dist/ReactToastify.css';
-import { Route, Routes } from 'react-router-dom';
-import { ToastContainer, Zoom } from 'react-toastify';
-import { PUBLIC_ROUTES, USER_ROUTES, RouteItem } from './route';
+import React, { Fragment } from "react";
+import { Route, Routes } from "react-router-dom";
+import { ToastContainer, Zoom } from "react-toastify";
+import { PUBLIC_ROUTES, USER_ROUTES, RouteItem } from "./route";
 
 function App() {
   const createRoute = (routes: RouteItem[], layout: any) => {
