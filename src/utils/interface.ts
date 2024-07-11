@@ -1,4 +1,10 @@
-import { Participant } from "../WaitingRoom/interface";
+export interface Participant {
+  name: string;
+}
+
+export interface GameStartDto {
+  code: string;
+}
 
 export interface Question {
   id: string;
@@ -26,7 +32,17 @@ export interface GameAnswerDto {
   responeTimestamp: number;
 }
 
+export interface RankingBoardParticipant extends Participant {
+  totalScore: number;
+  latestScore: number;
+}
+
 export interface RankingBoard {
   hasNextQuestion: boolean;
-  data: Participant[];
+  data: RankingBoardParticipant[];
+}
+
+export interface GameJoinCreateDto {
+  name: string;
+  code: string;
 }

@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Box,
   Typography,
@@ -6,12 +7,20 @@ import {
   Stack,
   Paper,
 } from '@mui/material';
-import { RankingBoard } from '@pages/Game/interface';
-import { Participant } from '@pages/WaitingRoom/interface';
-import React from 'react';
+import { RankingBoardParticipant } from '@utils/interface';
+import RaningBoardItem from './RankingBoardItem';
+import { useSelector } from 'react-redux';
+import { RootState } from 'store';
 
+export interface RankingBoardData {
+  hasNextQuestion: boolean;
+  isInTop3?: boolean;
+  top3?: RankingBoardParticipant[];
+  currentClient?: { yourRank: number } & RankingBoardParticipant;
+  others?: RankingBoardParticipant[];
+}
 interface RankingBoardComponentProps {
-  data: any;
+  data: RankingBoardData;
   handleNext: any;
 }
 
@@ -19,9 +28,11 @@ const RankingBoardComponent: React.FC<RankingBoardComponentProps> = ({
   data,
   handleNext,
 }) => {
-  const { hasNextQuestion, isInTop3, top3, currentClient } = data ?? {
+  console.log('DATA: ', data);
+  const { hasNextQuestion, isInTop3, top3, currentClient, others } = data ?? {
     hasNextQuestion: true,
   };
+  const { isHost, name } = useSelector((state: RootState) => state.app);
   return (
     <Box
       sx={{
@@ -48,48 +59,27 @@ const RankingBoardComponent: React.FC<RankingBoardComponentProps> = ({
           </Box>
         )}
         <Stack direction='column' spacing={2}>
-          {isInTop3 ? (
-            top3?.map((item, index) => {
-              return (
-                <Paper
-                  square={false}
-                  elevation={index == 0 ? 2 : 0}
-                  sx={{
-                    width: '100%',
-                    px: 2,
-                    py: 1,
-                    backgroundColor: index == 0 ? '#fff' : 'transparent',
-                    color: index == 0 ? '#000' : '#fff',
-                  }}
-                >
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <Typography
-                      variant='h2'
-                      sx={{ fontSize: '2.5rem', fontWeight: '700' }}
-                    >
-                      {item.name}
-                    </Typography>
-                    <Typography
-                      variant='h2'
-                      sx={{
-                        fontSize: '2.5rem',
-                        fontWeight: '700',
-                      }}
-                    >
-                      {item.score}
-                    </Typography>
-                  </Box>
-                </Paper>
-              );
-            })
-          ) : (
-            <div></div>
+          {top3?.map((item: RankingBoardParticipant, index) => {
+            return (
+              <RaningBoardItem
+                index={index}
+                participant={item}
+                isCurrentClient={item.name === name}
+              />
+            );
+          })}
+          {!isInTop3 && (
+            <RaningBoardItem
+              index={currentClient.yourRank}
+              participant={currentClient}
+              isCurrentClient={currentClient.name === name}
+            />
           )}
+          {isHost
+            ? others?.map((item: RankingBoardParticipant, index) => {
+                return <RaningBoardItem index={index + 3} participant={item} />;
+              })
+            : null}
         </Stack>
       </Container>
     </Box>
