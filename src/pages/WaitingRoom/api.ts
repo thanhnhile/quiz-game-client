@@ -1,5 +1,5 @@
-import * as request from "../../utils/request";
-import { GameStartDto, Participant } from "./interface";
+import * as request from '../../utils/request';
+import { GameStartDto, Participant } from '@utils/interface';
 
 export const getParticipants = async (code: string) => {
   try {
@@ -12,7 +12,7 @@ export const getParticipants = async (code: string) => {
 
 export const startGame = async (payload: GameStartDto) => {
   try {
-    return await request.post("game/start", payload);
+    return await request.post('game/start', payload);
   } catch (e) {
     console.log(e);
   }

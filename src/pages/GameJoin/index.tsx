@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { GameJoinCreateDto } from './interface';
+import { GameJoinCreateDto } from '@utils/interface';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../store';
 import { joinGame, setAppState } from '@reducers/appSlice';

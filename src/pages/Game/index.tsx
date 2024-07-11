@@ -8,7 +8,7 @@ import {
   GameAnswerDto,
   Question,
   RankingBoard,
-} from './interface';
+} from '@utils/interface';
 import { useNavigate } from 'react-router-dom';
 import { Box } from '@mui/material';
 import Lottie from 'react-lottie';
@@ -101,16 +101,26 @@ const Game = () => {
       data: [
         {
           name: 'laal',
-          score: 920,
-          _id: '665367b21c6fbf8cef75fc2a',
+          totalScore: 920,
+          latestScore: 100,
         },
         {
           name: 'laal2',
-          score: 950,
-          _id: '665367b21c6fbf8cef75fc2a',
+          totalScore: 850,
+          latestScore: 0,
+        },
+        {
+          name: 'laal3',
+          totalScore: 620,
+          latestScore: 500,
+        },
+        {
+          name: 'laal24',
+          totalScore: 450,
+          latestScore: 0,
         },
       ],
-    };
+    } as RankingBoard;
     return true ? (
       <RankingBoardComponent
         data={mapFunction.mapRankingBoardData(fakeData, name)}

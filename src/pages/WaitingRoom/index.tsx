@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import { GAME_EVENTS } from '../../utils/events';
-import { GameStartDto, Participant } from './interface';
+import { GameStartDto, Participant } from '@utils/interface';
 import { useSelector } from 'react-redux';
 import { RootState, useAppDispatch } from '../../store';
 import {

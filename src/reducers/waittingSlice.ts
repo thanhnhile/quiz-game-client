@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { Participant } from '../pages/WaitingRoom/interface';
+import { Participant } from '@utils/interface';
 import {
   getParticipants,
   startGame as startGameApi,

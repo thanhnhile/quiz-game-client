@@ -1,9 +1,14 @@
-import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import {
+  PayloadAction,
+  createAsyncThunk,
+  createSlice,
+  isAction,
+} from '@reduxjs/toolkit';
 import { Socket, io } from 'socket.io-client';
-import { AppStateType, BASE_URL, UIState } from '../utils/constants';
-import { RankingBoard } from '../pages/Game/interface';
-import { postJoinGame } from '../pages/GameJoin/api';
-import { postCreateNewGame } from '../pages/CreateGameSession/api';
+import { AppStateType, BASE_URL, UIState } from '@utils/constants';
+import { RankingBoard } from '@utils/interface';
+import { postJoinGame } from '@pages/GameJoin/api';
+import { postCreateNewGame } from '@pages/CreateGameSession/api';
 
 type AppSliceType = {
   gameCode?: string;
