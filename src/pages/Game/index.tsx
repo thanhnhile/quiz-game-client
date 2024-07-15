@@ -1,22 +1,22 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store';
-import { useEffect, useState } from 'react';
-import { GAME_EVENTS } from '@utils/events';
-import { setAppState, setRankingBoard, setUIState } from '@reducers/appSlice';
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store";
+import { useEffect, useState } from "react";
+import { GAME_EVENTS } from "@utils/events";
+import { setAppState, setRankingBoard, setUIState } from "@reducers/appSlice";
 import {
   CurrentQuestion,
   GameAnswerDto,
   Question,
   RankingBoard,
-} from '@utils/interface';
-import { useNavigate } from 'react-router-dom';
-import { Box } from '@mui/material';
-import Lottie from 'react-lottie';
-import * as startAnimation from '@utils/lottie/start.json';
-import Countdown from '@components/game/Countdown';
-import RankingBoardComponent from '@components/game/RankingBoard';
-import { motion } from 'framer-motion';
-import * as mapFunction from './functions';
+} from "@utils/interface";
+import { useNavigate } from "react-router-dom";
+import { Box } from "@mui/material";
+import Lottie from "react-lottie";
+import * as startAnimation from "@utils/lottie/start.json";
+import Countdown from "@components/game/Countdown";
+import RankingBoardComponent from "@components/game/RankingBoard";
+import { motion } from "framer-motion";
+import * as mapFunction from "./functions";
 
 const Game = () => {
   const { socket, uiState, rankingBoard, name, gameCode, isHost } = useSelector(
@@ -24,12 +24,12 @@ const Game = () => {
   );
   const [count, setCount] = useState<number>(0);
   const [currentQuestion, setCurrentQuestion] = useState<CurrentQuestion>();
-  const [answer, setAnswer] = useState('');
+  const [answer, setAnswer] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleQuizzQuestions = (data: Question) => {
-    dispatch(setUIState('QUESTION'));
+    dispatch(setUIState("QUESTION"));
     setCurrentQuestion({
       ...data,
       appearTimestamp: Date.now(),
@@ -41,9 +41,9 @@ const Game = () => {
     setAnswer(optionId);
     const responeTimestamp = Date.now() - currentQuestion.appearTimestamp;
     const payload: GameAnswerDto = {
-      code: gameCode ?? '',
-      participantName: name ?? '',
-      questionId: currentQuestion?._id ?? '',
+      code: gameCode ?? "",
+      participantName: name ?? "",
+      questionId: currentQuestion?._id ?? "",
       answerId: optionId,
       responeTimestamp,
     };
@@ -56,26 +56,30 @@ const Game = () => {
 
   useEffect(() => {
     socket?.on(GAME_EVENTS.GAME_STARTING, (currentCount) => {
-      count === 0 && dispatch(setUIState('COUNT_DOWN'));
+      count === 0 && dispatch(setUIState("COUNT_DOWN"));
       setCount(currentCount);
     });
     socket?.on(GAME_EVENTS.QUIZZ_QUESTIONS, handleQuizzQuestions);
     socket?.on(GAME_EVENTS.QUESTION_TIME_OUT, (data) => {
-      setAnswer('');
+      setAnswer("");
       console.log(data);
     });
     socket?.on(GAME_EVENTS.UPDATE_RANKING, (data: RankingBoard) => {
-      data.hasNextQuestion && dispatch(setUIState('RANKING_BOARD'));
+      data.hasNextQuestion && dispatch(setUIState("RANKING_BOARD"));
       dispatch(setRankingBoard(data));
     });
     socket?.on(GAME_EVENTS.TIME_OUT, () => {
-      dispatch(setAppState('RESULT'));
+      dispatch(setAppState("RESULT"));
       navigate(`/game/${gameCode}/result`);
+    });
+
+    socket?.on("error", (data) => {
+      console.log("ERROR: ", data);
     });
   }, []);
 
   const renderCountDown = () => {
-    return uiState === 'COUNT_DOWN' ? (
+    return uiState === "COUNT_DOWN" ? (
       <motion.div
         initial={{ scale: 0.5, opacity: 0.5 }}
         animate={{ scale: 1.3, opacity: 1 }}
@@ -86,7 +90,7 @@ const Game = () => {
   };
 
   const renderQuestion = () => {
-    return uiState === 'QUESTION' ? (
+    return uiState === "QUESTION" ? (
       <QuestionComponent
         question={currentQuestion}
         answer={answer}
@@ -96,34 +100,9 @@ const Game = () => {
   };
 
   const renderRankingBoard = () => {
-    const fakeData = {
-      hasNextQuestion: true,
-      data: [
-        {
-          name: 'laal',
-          totalScore: 920,
-          latestScore: 100,
-        },
-        {
-          name: 'laal2',
-          totalScore: 850,
-          latestScore: 0,
-        },
-        {
-          name: 'laal3',
-          totalScore: 620,
-          latestScore: 500,
-        },
-        {
-          name: 'laal24',
-          totalScore: 450,
-          latestScore: 0,
-        },
-      ],
-    } as RankingBoard;
-    return true ? (
+    return uiState === "RANKING_BOARD" ? (
       <RankingBoardComponent
-        data={mapFunction.mapRankingBoardData(fakeData, name)}
+        data={mapFunction.mapRankingBoardData(rankingBoard, name)}
         handleNext={handleNext}
       />
     ) : null;
@@ -134,10 +113,10 @@ const Game = () => {
       autoplay: true,
       animationData: startAnimation,
       rendererSettings: {
-        preserveAspectRatio: 'xMidYMid slice',
+        preserveAspectRatio: "xMidYMid slice",
       },
     };
-    return uiState === 'STARTING' ? (
+    return uiState === "STARTING" ? (
       <Lottie options={defaultOptions} height={400} width={400} />
     ) : null;
   };
@@ -145,16 +124,16 @@ const Game = () => {
   return (
     <Box
       sx={{
-        height: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        flexDirection: 'column',
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
       }}
     >
-      {/* {renderStarting()}
+      {renderStarting()}
       {renderCountDown()}
-      {renderQuestion()} */}
+      {renderQuestion()}
       {renderRankingBoard()}
     </Box>
   );
